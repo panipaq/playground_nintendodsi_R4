@@ -10,6 +10,9 @@
 #include <coffee_americano.h>
 #include <coffee_capuccino.h>
 #include <coffee_filter.h>
+#include <kaffeedex_americano.h>
+#include <kaffeedex_capuccino.h>
+#include <kaffeedex_filter.h>
 
 enum Screen {
 	SCREEN_START,
@@ -29,6 +32,21 @@ static SpriteButton startButtons[] = {
 
 static const char* coffeeNames[] = { "Americano", "Cappuccino", "Filterkaffee" };
 
+// Statt den Infotext zur Laufzeit zu zeichnen (Konsole + Sprite-Icon auf dem
+// Hauptbildschirm), ist die komplette Infoseite pro Kaffeeart fertig als
+// Bitmap gerendert (siehe gfx/kaffeedex_*.png) und wird beim Durchblaettern
+// einfach als kompletter Bildspeicher-Block in den BG3-Grafikspeicher
+// kopiert. Das ist deutlich robuster als das vorherige dynamische Setup.
+struct KaffeedexBitmap {
+	const void* data;
+	unsigned int len;
+};
+static const KaffeedexBitmap kaffeedexBitmaps[] = {
+	{ kaffeedex_americanoBitmap, kaffeedex_americanoBitmapLen },
+	{ kaffeedex_capuccinoBitmap, kaffeedex_capuccinoBitmapLen },
+	{ kaffeedex_filterBitmap, kaffeedex_filterBitmapLen },
+};
+
 // { frame, iconGfx, iconPaletteBank, x, y, oamId }
 // frame/iconGfx werden erst zur Laufzeit gesetzt (siehe main()).
 static IconButton coffeeButtons[] = {
@@ -41,7 +59,10 @@ static IconButton coffeeButtons[] = {
 static SpriteButton confirmButton = { "bestaetigen", 64, 136, 6, 0 };
 
 int main(void) {
-	// Oberer Bildschirm: reines Hintergrundbild (16bpp Bitmap, BG3).
+	// Oberer Bildschirm: nur ein 16bpp Bitmap-Hintergrund (BG3). Sowohl der
+	// Start-Screen (bg_top) als auch die Kaffeedex-Infoseiten (kaffeedex_*)
+	// sind komplett vorgerenderte Bilder in derselben Aufloesung -- zum
+	// Wechseln wird einfach der komplette Bildspeicher ueberschrieben.
 	videoSetMode(MODE_5_2D | DISPLAY_BG3_ACTIVE);
 	vramSetBankA(VRAM_A_MAIN_BG);
 	int bgTop = bgInit(3, BgType_Bmp16, BgSize_B16_256x256, 0, 0);
@@ -104,6 +125,7 @@ int main(void) {
 	int selectedIndex = 0;
 	CoffeeFocus coffeeFocus = FOCUS_CARD;
 	int coffeeCardIndex = 0;
+	int lastCoffeeInfoIndex = -1; // erzwingt einmaliges Zeichnen beim ersten Betreten des Screens
 
 	while (pmMainLoop()) {
 		swiWaitForVBlank();
@@ -160,6 +182,7 @@ int main(void) {
 				screen = SCREEN_COFFEE_TYPE;
 				coffeeFocus = FOCUS_CARD;
 				coffeeCardIndex = 0;
+				lastCoffeeInfoIndex = -1; // erzwingt Neuzeichnen des oberen Bildschirms
 				pressedIndex = -1;
 			} else if (confirmed && selectedIndex == 1) {
 				// Bibliothek hat noch keinen eigenen Screen.
@@ -174,6 +197,11 @@ int main(void) {
 			}
 			if (keysDown() & KEY_DOWN) coffeeFocus = FOCUS_CONFIRM;
 			if (keysDown() & KEY_UP) coffeeFocus = FOCUS_CARD;
+
+			if (coffeeCardIndex != lastCoffeeInfoIndex) {
+				dmaCopy(kaffeedexBitmaps[coffeeCardIndex].data, bgGetGfxPtr(bgTop), kaffeedexBitmaps[coffeeCardIndex].len);
+				lastCoffeeInfoIndex = coffeeCardIndex;
+			}
 
 			if (keysDown() & KEY_A) {
 				pressedIndex = (coffeeFocus == FOCUS_CARD) ? coffeeCardIndex : (int)COFFEE_BUTTON_COUNT;
@@ -224,6 +252,8 @@ int main(void) {
 				// Zurueck zum Start-Bildschirm.
 				for (size_t i = 0; i < COFFEE_BUTTON_COUNT; i++) hideIconButton(coffeeButtons[i]);
 				hideSpriteButton(confirmButton, buttonGfx);
+
+				dmaCopy(bg_topBitmap, bgGetGfxPtr(bgTop), bg_topBitmapLen);
 
 				screen = SCREEN_START;
 				selectedIndex = 0;
