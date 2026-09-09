@@ -37,23 +37,12 @@ int placeSpriteButton(SpriteButton& button, const SpriteButtonGfx& gfx, int oamI
 // Muss jeden Frame aufgerufen werden, damit die Aenderung sichtbar bleibt.
 void updateSpriteButtonPress(const SpriteButton& button, const SpriteButtonGfx& gfx, bool pressed);
 
+// Blendet den Button aus (fuer Bildschirmwechsel), OAM-Slots bleiben belegt.
+void hideSpriteButton(const SpriteButton& button, const SpriteButtonGfx& gfx);
+
 // Prueft, ob eine Touch-Position (in Pixeln) innerhalb der Button-Flaeche liegt.
 bool isTouchInSpriteButton(const SpriteButton& button, const touchPosition& touch);
 
-// Die vier Eckstuecke einer Klammer-Auswahlanzeige (aus UiCozyFree.png).
-struct BracketGfx {
-	u16* topLeft;
-	u16* topRight;
-	u16* bottomLeft;
-	u16* bottomRight;
-};
-
-// Laedt Tile-Daten und Palette der Klammer-Grafik einmalig in den
-// Sprite-Speicher des Touchscreens (sub display).
-BracketGfx loadBracketGfx();
-
-// Platziert die vier Eckstuecke der Klammer um den angegebenen Button.
-// oamBaseId braucht 4 zusammenhaengende, exklusiv reservierte OAM-IDs.
-// Muss jeden Frame aufgerufen werden, um die Klammer auf dem aktuell
-// ausgewaehlten Button zu halten.
-void updateSelectionBracket(const SpriteButton& button, const BracketGfx& gfx, int oamBaseId);
+// Sichtbarer Hoehen-Bereich des Buttons in Pixeln (fuer bracket.h's
+// updateSelectionBracketAt, siehe main.cpp).
+#define SPRITE_BUTTON_HEIGHT_PX 27

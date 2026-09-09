@@ -2,15 +2,43 @@
 #include <stdio.h>
 
 #include "spritebutton.h"
+#include "iconbutton.h"
+#include "bracket.h"
 #include <cup.h>
 #include <bg_top.h>
 #include <bg_bottom.h>
+#include <coffee_americano.h>
+#include <coffee_capuccino.h>
+#include <coffee_filter.h>
 
-static SpriteButton buttons[] = {
+enum Screen {
+	SCREEN_START,
+	SCREEN_COFFEE_TYPE,
+};
+
+enum CoffeeFocus {
+	FOCUS_CARD,
+	FOCUS_CONFIRM,
+};
+
+static SpriteButton startButtons[] = {
 	{ "Kaffee bestellen", 32, 64,  9, 0 },
 	{ "Bibliothek",       32, 112, 9, 0 },
 };
-#define BUTTON_COUNT (sizeof(buttons) / sizeof(buttons[0]))
+#define START_BUTTON_COUNT (sizeof(startButtons) / sizeof(startButtons[0]))
+
+static const char* coffeeNames[] = { "Americano", "Cappuccino", "Filterkaffee" };
+
+// { frame, iconGfx, iconPaletteBank, x, y, oamId }
+// frame/iconGfx werden erst zur Laufzeit gesetzt (siehe main()).
+static IconButton coffeeButtons[] = {
+	{ nullptr, nullptr, 11, 4,   16, 0 },
+	{ nullptr, nullptr, 12, 88,  16, 0 },
+	{ nullptr, nullptr, 13, 172, 16, 0 },
+};
+#define COFFEE_BUTTON_COUNT (sizeof(coffeeButtons) / sizeof(coffeeButtons[0]))
+
+static SpriteButton confirmButton = { "bestaetigen", 64, 136, 6, 0 };
 
 int main(void) {
 	// Oberer Bildschirm: reines Hintergrundbild (16bpp Bitmap, BG3).
@@ -50,13 +78,32 @@ int main(void) {
 	BracketGfx bracketGfx = loadBracketGfx();
 
 	int oamId = 1; // 0 ist fuer die Kaffeetasse reserviert
-	for (size_t i = 0; i < BUTTON_COUNT; i++) {
-		oamId = placeSpriteButton(buttons[i], buttonGfx, oamId);
+	for (size_t i = 0; i < START_BUTTON_COUNT; i++) {
+		oamId = placeSpriteButton(startButtons[i], buttonGfx, oamId);
 	}
-	int bracketOamId = oamId; // 4 zusammenhaengende IDs fuer die Auswahl-Klammer
+	int bracketOamId = oamId;
+	oamId += 4;
 
+	oamId = placeSpriteButton(confirmButton, buttonGfx, oamId);
+	hideSpriteButton(confirmButton, buttonGfx);
+
+	static IconButtonFrameGfx iconFrameGfx = loadIconFrameGfx(10);
+	for (size_t i = 0; i < COFFEE_BUTTON_COUNT; i++) coffeeButtons[i].frame = &iconFrameGfx;
+
+	coffeeButtons[0].iconGfx = loadIconGfx(coffee_americanoTiles, coffee_americanoTilesLen, coffee_americanoPal, coffeeButtons[0].iconPaletteBank);
+	coffeeButtons[1].iconGfx = loadIconGfx(coffee_capuccinoTiles, coffee_capuccinoTilesLen, coffee_capuccinoPal, coffeeButtons[1].iconPaletteBank);
+	coffeeButtons[2].iconGfx = loadIconGfx(coffee_filterTiles, coffee_filterTilesLen, coffee_filterPal, coffeeButtons[2].iconPaletteBank);
+	for (size_t i = 0; i < COFFEE_BUTTON_COUNT; i++) {
+		placeIconButton(coffeeButtons[i], oamId);
+		oamId += 7; // 6 Rahmen-Teile + Icon
+		hideIconButton(coffeeButtons[i]);
+	}
+
+	Screen screen = SCREEN_START;
 	int pressedIndex = -1;
 	int selectedIndex = 0;
+	CoffeeFocus coffeeFocus = FOCUS_CARD;
+	int coffeeCardIndex = 0;
 
 	while (pmMainLoop()) {
 		swiWaitForVBlank();
@@ -64,46 +111,128 @@ int main(void) {
 
 		if (keysDown() & KEY_START) break;
 
-		if (keysDown() & KEY_UP) {
-			selectedIndex = (selectedIndex - 1 + BUTTON_COUNT) % BUTTON_COUNT;
-		}
-		if (keysDown() & KEY_DOWN) {
-			selectedIndex = (selectedIndex + 1) % BUTTON_COUNT;
-		}
+		if (screen == SCREEN_START) {
+			if (keysDown() & KEY_UP) {
+				selectedIndex = (selectedIndex - 1 + START_BUTTON_COUNT) % START_BUTTON_COUNT;
+			}
+			if (keysDown() & KEY_DOWN) {
+				selectedIndex = (selectedIndex + 1) % START_BUTTON_COUNT;
+			}
 
-		if (keysDown() & KEY_A) {
-			pressedIndex = selectedIndex;
-			iprintf("\x1b[20;0HGedrueckt: %-20s", buttons[selectedIndex].label);
-		}
-		if (keysUp() & KEY_A) {
-			pressedIndex = -1;
-		}
+			if (keysDown() & KEY_A) {
+				pressedIndex = selectedIndex;
+			}
 
-		if (keysDown() & KEY_TOUCH) {
-			touchPosition touch;
-			touchRead(&touch);
+			if (keysDown() & KEY_TOUCH) {
+				touchPosition touch;
+				touchRead(&touch);
 
-			for (size_t i = 0; i < BUTTON_COUNT; i++) {
-				if (isTouchInSpriteButton(buttons[i], touch)) {
-					selectedIndex = i;
-					pressedIndex = i;
-					iprintf("\x1b[20;0HGedrueckt: %-20s", buttons[i].label);
-					break;
+				for (size_t i = 0; i < START_BUTTON_COUNT; i++) {
+					if (isTouchInSpriteButton(startButtons[i], touch)) {
+						selectedIndex = i;
+						pressedIndex = i;
+						break;
+					}
 				}
+			}
+
+			bool confirmed = (keysUp() & (KEY_A | KEY_TOUCH)) && pressedIndex >= 0;
+
+			if (keysUp() & (KEY_A | KEY_TOUCH)) {
+				pressedIndex = -1;
+			}
+
+			for (size_t i = 0; i < START_BUTTON_COUNT; i++) {
+				updateSpriteButtonPress(startButtons[i], buttonGfx, (int)i == pressedIndex);
+			}
+			updateSelectionBracketAt(startButtons[selectedIndex].x, startButtons[selectedIndex].y,
+				spriteButtonWidth(startButtons[selectedIndex]), SPRITE_BUTTON_HEIGHT_PX, bracketGfx, bracketOamId);
+
+			oamSet(&oamSub, 0, 192, 24, 0, 0, SpriteSize_64x32, SpriteColorFormat_256Color,
+				cupGfx, -1, false, false, false, false, false);
+
+			if (confirmed && selectedIndex == 0) {
+				// "Kaffee bestellen" -> zur Kaffeeart-Auswahl wechseln.
+				for (size_t i = 0; i < START_BUTTON_COUNT; i++) hideSpriteButton(startButtons[i], buttonGfx);
+				oamSet(&oamSub, 0, 0, 0, 0, 0, SpriteSize_64x32, SpriteColorFormat_256Color,
+					cupGfx, -1, false, true, false, false, false);
+
+				screen = SCREEN_COFFEE_TYPE;
+				coffeeFocus = FOCUS_CARD;
+				coffeeCardIndex = 0;
+				pressedIndex = -1;
+			} else if (confirmed && selectedIndex == 1) {
+				// Bibliothek hat noch keinen eigenen Screen.
+				iprintf("\x1b[20;0HBibliothek: noch nicht verfuegbar");
+			}
+		} else if (screen == SCREEN_COFFEE_TYPE) {
+			if (keysDown() & KEY_LEFT && coffeeFocus == FOCUS_CARD) {
+				coffeeCardIndex = (coffeeCardIndex - 1 + COFFEE_BUTTON_COUNT) % COFFEE_BUTTON_COUNT;
+			}
+			if (keysDown() & KEY_RIGHT && coffeeFocus == FOCUS_CARD) {
+				coffeeCardIndex = (coffeeCardIndex + 1) % COFFEE_BUTTON_COUNT;
+			}
+			if (keysDown() & KEY_DOWN) coffeeFocus = FOCUS_CONFIRM;
+			if (keysDown() & KEY_UP) coffeeFocus = FOCUS_CARD;
+
+			if (keysDown() & KEY_A) {
+				pressedIndex = (coffeeFocus == FOCUS_CARD) ? coffeeCardIndex : (int)COFFEE_BUTTON_COUNT;
+			}
+
+			if (keysDown() & KEY_TOUCH) {
+				touchPosition touch;
+				touchRead(&touch);
+
+				for (size_t i = 0; i < COFFEE_BUTTON_COUNT; i++) {
+					if (isTouchInIconButton(coffeeButtons[i], touch)) {
+						coffeeCardIndex = i;
+						coffeeFocus = FOCUS_CARD;
+						pressedIndex = i;
+						break;
+					}
+				}
+				if (isTouchInSpriteButton(confirmButton, touch)) {
+					coffeeFocus = FOCUS_CONFIRM;
+					pressedIndex = COFFEE_BUTTON_COUNT;
+				}
+			}
+
+			bool confirmed = (keysUp() & (KEY_A | KEY_TOUCH)) && pressedIndex >= 0;
+
+			if (keysUp() & (KEY_A | KEY_TOUCH)) {
+				pressedIndex = -1;
+			}
+
+			for (size_t i = 0; i < COFFEE_BUTTON_COUNT; i++) {
+				updateIconButtonPress(coffeeButtons[i], (int)i == pressedIndex);
+			}
+			updateSpriteButtonPress(confirmButton, buttonGfx, pressedIndex == (int)COFFEE_BUTTON_COUNT);
+
+			if (coffeeFocus == FOCUS_CARD) {
+				updateSelectionBracketAt(coffeeButtons[coffeeCardIndex].x, coffeeButtons[coffeeCardIndex].y,
+					ICON_BUTTON_WIDTH_PX, ICON_BUTTON_HEIGHT_PX, bracketGfx, bracketOamId);
+			} else {
+				updateSelectionBracketAt(confirmButton.x, confirmButton.y,
+					spriteButtonWidth(confirmButton), SPRITE_BUTTON_HEIGHT_PX, bracketGfx, bracketOamId);
+			}
+
+			if (confirmed && pressedIndex == (int)COFFEE_BUTTON_COUNT) {
+				iprintf("\x1b[20;0HAusgewaehlt: %-20s", coffeeNames[coffeeCardIndex]);
+			}
+
+			if (keysDown() & KEY_B) {
+				// Zurueck zum Start-Bildschirm.
+				for (size_t i = 0; i < COFFEE_BUTTON_COUNT; i++) hideIconButton(coffeeButtons[i]);
+				hideSpriteButton(confirmButton, buttonGfx);
+
+				screen = SCREEN_START;
+				selectedIndex = 0;
+				pressedIndex = -1;
+
+				for (size_t i = 0; i < START_BUTTON_COUNT; i++) placeSpriteButton(startButtons[i], buttonGfx, startButtons[i].oamBaseId);
 			}
 		}
 
-		if (keysUp() & KEY_TOUCH) {
-			pressedIndex = -1;
-		}
-
-		for (size_t i = 0; i < BUTTON_COUNT; i++) {
-			updateSpriteButtonPress(buttons[i], buttonGfx, (int)i == pressedIndex);
-		}
-		updateSelectionBracket(buttons[selectedIndex], bracketGfx, bracketOamId);
-
-		oamSet(&oamSub, 0, 192, 24, 0, 0, SpriteSize_64x32, SpriteColorFormat_256Color,
-			cupGfx, -1, false, false, false, false, false);
 		oamUpdate(&oamSub);
 	}
 
