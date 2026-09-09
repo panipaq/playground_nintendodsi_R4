@@ -1,0 +1,7 @@
+-gt
+-gB4
+-m!
+# -pT{n}: Index von Magenta (Transparenz-Key) in der von grit erzeugten
+# Palette. Muss nach jeder Farbaenderung im PNG neu geprueft werden (siehe
+# tmp-Check mit grit -ftc), da grit die Reihenfolge nach Haeufigkeit vergibt.
+-pT2

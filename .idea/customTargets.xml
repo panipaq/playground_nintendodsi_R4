@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="CLionExternalBuildManager">
+    <target id="cee43f51-780f-457e-a34b-6e4846e50ed2" name="nds-build" defaultType="TOOL">
+      <configuration id="f4bd99ae-fcb8-41bc-a9d6-3b67dd96794e" name="nds-build">
+        <build type="TOOL">
+          <tool actionId="Tool_External Tools_make" />
+        </build>
+      </configuration>
+    </target>
+  </component>
+</project>
