@@ -47,11 +47,13 @@ int main(void) {
 	dmaCopy(cupPal, SPRITE_PALETTE_SUB, cupPalLen);
 
 	SpriteButtonGfx buttonGfx = loadSpriteButtonGfx();
+	BracketGfx bracketGfx = loadBracketGfx();
 
 	int oamId = 1; // 0 ist fuer die Kaffeetasse reserviert
 	for (size_t i = 0; i < BUTTON_COUNT; i++) {
 		oamId = placeSpriteButton(buttons[i], buttonGfx, oamId);
 	}
+	int bracketOamId = oamId; // 4 zusammenhaengende IDs fuer die Auswahl-Klammer
 
 	int pressedIndex = -1;
 	int selectedIndex = 0;
@@ -97,8 +99,8 @@ int main(void) {
 
 		for (size_t i = 0; i < BUTTON_COUNT; i++) {
 			updateSpriteButtonPress(buttons[i], buttonGfx, (int)i == pressedIndex);
-			drawSelectionMarker(buttons[i], (int)i == selectedIndex);
 		}
+		updateSelectionBracket(buttons[selectedIndex], bracketGfx, bracketOamId);
 
 		oamSet(&oamSub, 0, 192, 24, 0, 0, SpriteSize_64x32, SpriteColorFormat_256Color,
 			cupGfx, -1, false, false, false, false, false);

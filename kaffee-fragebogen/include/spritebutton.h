@@ -40,7 +40,20 @@ void updateSpriteButtonPress(const SpriteButton& button, const SpriteButtonGfx& 
 // Prueft, ob eine Touch-Position (in Pixeln) innerhalb der Button-Flaeche liegt.
 bool isTouchInSpriteButton(const SpriteButton& button, const touchPosition& touch);
 
-// Zeichnet (oder loescht) einen Cursor-Pfeil links neben dem Button, fuer die
-// Steuerkreuz-Navigation. Muss jeden Frame fuer alle Buttons aufgerufen
-// werden, damit ein Wechsel der Auswahl den alten Pfeil mit entfernt.
-void drawSelectionMarker(const SpriteButton& button, bool selected);
+// Die vier Eckstuecke einer Klammer-Auswahlanzeige (aus UiCozyFree.png).
+struct BracketGfx {
+	u16* topLeft;
+	u16* topRight;
+	u16* bottomLeft;
+	u16* bottomRight;
+};
+
+// Laedt Tile-Daten und Palette der Klammer-Grafik einmalig in den
+// Sprite-Speicher des Touchscreens (sub display).
+BracketGfx loadBracketGfx();
+
+// Platziert die vier Eckstuecke der Klammer um den angegebenen Button.
+// oamBaseId braucht 4 zusammenhaengende, exklusiv reservierte OAM-IDs.
+// Muss jeden Frame aufgerufen werden, um die Klammer auf dem aktuell
+// ausgewaehlten Button zu halten.
+void updateSelectionBracket(const SpriteButton& button, const BracketGfx& gfx, int oamBaseId);

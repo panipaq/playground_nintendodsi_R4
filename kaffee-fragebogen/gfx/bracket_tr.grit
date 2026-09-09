@@ -1,0 +1,6 @@
+-gt
+-gB4
+-m!
+# -pT{n}: Index von Magenta (Transparenz-Key). Nach Farbaenderung im PNG neu
+# pruefen (grit -ftc), da grit die Reihenfolge nach Haeufigkeit vergibt.
+-pT1

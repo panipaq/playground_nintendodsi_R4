@@ -6,6 +6,10 @@
 #include <btn_left.h>
 #include <btn_mid.h>
 #include <btn_right.h>
+#include <bracket_tl.h>
+#include <bracket_tr.h>
+#include <bracket_bl.h>
+#include <bracket_br.h>
 
 #define CAP_WIDTH_PX 16
 #define CONTENT_HEIGHT_PX 27 // sichtbarer Bereich der Grafik, Rest bis 32px ist transparent
@@ -19,6 +23,12 @@
 // sich die globale Sprite-Palette (256 Eintraege, 8bpp) nicht mit anderen
 // Sprites wie der Kaffeetasse teilen und deren Farben ueberschreiben.
 #define BUTTON_PALETTE_BANK 15
+
+// Eigene Bank fuer die Klammer-Grafik, getrennt von den Buttons (Bank 15)
+// und der Kaffeetasse (8bpp, Indizes 0-75).
+#define BRACKET_PALETTE_BANK 14
+#define BRACKET_SIZE_PX 16
+#define BRACKET_INSET_PX 4 // wie weit die Klammern ueber die Button-Kante hinausragen
 
 SpriteButtonGfx loadSpriteButtonGfx() {
 	SpriteButtonGfx gfx;
@@ -101,13 +111,40 @@ bool isTouchInSpriteButton(const SpriteButton& b, const touchPosition& touch) {
 	       touch.py >= b.y && touch.py < b.y + CONTENT_HEIGHT_PX;
 }
 
-void drawSelectionMarker(const SpriteButton& b, bool selected) {
-	int row = labelRow(b);
-	int col = b.x / CELL_PX - 2;
+BracketGfx loadBracketGfx() {
+	BracketGfx gfx;
+	gfx.topLeft     = oamAllocateGfx(&oamSub, SpriteSize_16x16, SpriteColorFormat_16Color);
+	gfx.topRight    = oamAllocateGfx(&oamSub, SpriteSize_16x16, SpriteColorFormat_16Color);
+	gfx.bottomLeft  = oamAllocateGfx(&oamSub, SpriteSize_16x16, SpriteColorFormat_16Color);
+	gfx.bottomRight = oamAllocateGfx(&oamSub, SpriteSize_16x16, SpriteColorFormat_16Color);
 
-	if (selected) {
-		iprintf("\x1b[%d;%dH\x1b[37m>\x1b[39m", row, col);
-	} else {
-		iprintf("\x1b[%d;%dH ", row, col);
-	}
+	dmaCopy(bracket_tlTiles, gfx.topLeft, bracket_tlTilesLen);
+	dmaCopy(bracket_trTiles, gfx.topRight, bracket_trTilesLen);
+	dmaCopy(bracket_blTiles, gfx.bottomLeft, bracket_blTilesLen);
+	dmaCopy(bracket_brTiles, gfx.bottomRight, bracket_brTilesLen);
+
+	// Alle vier Ecken teilen sich dieselbe Palette.
+	dmaCopy(bracket_tlPal, SPRITE_PALETTE_SUB + BRACKET_PALETTE_BANK * 16, 16 * sizeof(u16));
+
+	return gfx;
+}
+
+void updateSelectionBracket(const SpriteButton& b, const BracketGfx& gfx, int oamBaseId) {
+	int width = spriteButtonWidth(b);
+
+	int left   = b.x - BRACKET_INSET_PX;
+	int right  = b.x + width + BRACKET_INSET_PX - BRACKET_SIZE_PX;
+	int top    = b.y - BRACKET_INSET_PX;
+	int bottom = b.y + CONTENT_HEIGHT_PX + BRACKET_INSET_PX - BRACKET_SIZE_PX;
+
+	// Prioritaet 1: vor der Button-Grafik (Prioritaet 3), damit die Klammer
+	// sichtbar ueber dem Button-Rand liegt.
+	oamSet(&oamSub, oamBaseId + 0, left, top, 1, BRACKET_PALETTE_BANK, SpriteSize_16x16, SpriteColorFormat_16Color,
+		gfx.topLeft, -1, false, false, false, false, false);
+	oamSet(&oamSub, oamBaseId + 1, right, top, 1, BRACKET_PALETTE_BANK, SpriteSize_16x16, SpriteColorFormat_16Color,
+		gfx.topRight, -1, false, false, false, false, false);
+	oamSet(&oamSub, oamBaseId + 2, left, bottom, 1, BRACKET_PALETTE_BANK, SpriteSize_16x16, SpriteColorFormat_16Color,
+		gfx.bottomLeft, -1, false, false, false, false, false);
+	oamSet(&oamSub, oamBaseId + 3, right, bottom, 1, BRACKET_PALETTE_BANK, SpriteSize_16x16, SpriteColorFormat_16Color,
+		gfx.bottomRight, -1, false, false, false, false, false);
 }
