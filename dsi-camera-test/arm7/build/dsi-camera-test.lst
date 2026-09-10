@@ -1,0 +1,337 @@
+00000000 a __end__
+00000000 A __sync_synchronize
+02380000 00000150 T __ds7_bootstub
+02380150 000000a2 T _blkShelterDldi
+023801f4 00000052 T __libc_init_array
+02380248 00000056 T build_argv
+023802a0 00000056 T crt0ProcessLoadList
+023802f8 00000244 T crt0Startup
+0238053c 0000004c T crt0CopyMem32
+02380588 00000058 T crt0FillMem32
+023805e0 00000010 t __memcpy_veneer
+023805f0 00000010 t ___init_veneer
+02380600 00000010 t ___pxiInit_veneer
+02380610 00000010 t ___threadInit_veneer
+02380620 a __loadlist_lma
+02380620 a __main_lma
+02383ad8 a __loadlist_start
+02383af0 a __loadlist_end
+02e80000 a __twl_lma
+02e80000 a __twl_loadlist_lma
+02e823c4 a __twl_loadlist_start
+02e823d0 a __twl_loadlist_end
+02fcc000 t __main_start
+02fcc000 T _init
+02fcc00c t __do_global_dtors_aux
+02fcc038 t frame_dummy
+02fcc05c 000000bc t _pmJumpToNextApp
+02fcc118 00000040 t _pmJumpToBootstub
+02fcc158 0000000c W __call_exitprocs
+02fcc164 00000022 T exit
+02fcc188 0000002e T __libc_fini_array
+02fcc1b8 00000014 T _exit
+02fcc1cc T _fini
+02fcc1d8 00000010 t ____syscall_exit_veneer
+02fcc1e8 r __EH_FRAME_BEGIN__
+02fcc1e8 r __FRAME_END__
+02fcc1ec d __frame_dummy_init_array_entry
+02fcc1ec d __init_array_start
+02fcc1ec d __preinit_array_end
+02fcc1ec d __preinit_array_start
+02fcc1f0 d __do_global_dtors_aux_fini_array_entry
+02fcc1f0 d __fini_array_start
+02fcc1f0 d __init_array_end
+02fcc1f4 d __fini_array_end
+02fcc1f4 t __heap_start
+02fcc1f4 ? __main_bss_end
+02fcc1f4 d __main_end
+02ff4000 t __heap_end
+037c0000 t __twl_start
+037c0000 00000070 T threadIrqWait2
+037c0070 00000038 T irqSet2
+037c00a8 0000009c T scfgSetMcPower
+037c0144 00000028 t _i2cSelectDevice
+037c016c 00000040 t _i2cSelectRegister
+037c01ac 00000038 t _i2cStop.part.0
+037c01e4 0000000c T _i2cSetMcuDelay
+037c01f0 000000a0 T i2cWriteRegister8
+037c0290 000000ac T i2cReadRegister8
+037c033c 00000096 t _mcuThread
+037c03d4 00000030 T mcuInit
+037c0404 00000028 T mcuStartThread
+037c042c 0000003c T mcuIrqSet
+037c0468 0000002e T mcuIssueReset
+037c0498 00000026 T mcuIssueShutdown
+037c04c0 00000054 t _cdcRawReadByte
+037c0514 0000003c t _cdcRawWriteByte
+037c0550 00000028 t _cdcSelectPage
+037c0578 0000003c T cdcReadReg
+037c05b4 00000040 T cdcWriteReg
+037c05f4 00000050 T cdcWriteRegMask
+037c0644 000000ac T cdcReadRegArray
+037c06f0 00000088 T cdcTscInit
+037c0778 0000015a T cdcTscReadTouch
+037c08d4 00000098 T cdcMicSetAmp
+037c096c 00000038 T gpioSetWlModule
+037c09a4 00000084 t _twlblkAesPrepare
+037c0a28 0000003c t _twlblkAesDmaXferRecv
+037c0a64 0000003c t _twlblkAesDmaXferSend
+037c0aa0 00000018 t _sdmcIrqHandler
+037c0ab8 00000038 t _twlblkAesDmaFinish.isra.0
+037c0af0 000000ac t _twlblkAesDmaWrite
+037c0b9c 000000ac t _twlblkAesDmaRead
+037c0c48 00000070 t _twlblkDmaWrite
+037c0cb8 00000070 t _twlblkDmaRead
+037c0d28 000000a8 T twlblkInit
+037c0dd0 00000050 T twlSdInit
+037c0e20 000000d8 T twlNandInit
+037c0ef8 00000008 T twlSdIsInserted
+037c0f00 00000044 T twlSdReadSectors
+037c0f44 00000044 T twlSdWriteSectors
+037c0f88 00000044 T twlNandReadSectors
+037c0fcc 00000044 T twlNandWriteSectors
+037c1010 00000090 T twlNandReadSectorsAes
+037c10a0 00000090 T twlNandWriteSectorsAes
+037c1130 00000004 T svcSha1CalcTWL
+037c1134 00000084 t tmioAckPortCardIrq.part.0
+037c11b8 000000b0 T tmioInit
+037c1268 0000025c T tmioIrqHandler
+037c14c4 000003b0 T tmioThreadMain
+037c1874 00000088 T tmioTransact
+037c18fc 00000090 T tmioXferRecvByCpu
+037c198c 00000048 T tmioDecodeTranSpeed
+037c19d4 0000006c t _sdmmcTransact
+037c1a40 00000068 t _sdmmcCardReadWriteSectors
+037c1aa8 0000051c T sdmmcCardInit
+037c1fc4 000001d4 T sdmmcCardInitFromState
+037c2198 00000138 T sdmmcCardDumpState
+037c22d0 00000020 T sdmmcCardReadSectors
+037c22f0 00000020 T sdmmcCardWriteSectors
+037c2310 0000000c t __threadSleepTicks_from_arm
+037c231c 0000000c t __svcSha1CalcTWL_from_arm
+037c2328 0000000c t __memset_from_arm
+037c2334 0000000c t __threadStart_from_arm
+037c2340 0000000c t __mailboxTrySend_from_arm
+037c234c 0000000c t ____bswapsi2_from_arm
+037c2358 0000000c t __irqSet2_from_arm
+037c2364 0000000c t __threadPrepare_from_arm
+037c2370 00000008 t ____aeabi_uidiv_from_thumb
+037c2378 0000000c t __mailboxRecv_from_arm
+037c23a8 00000010 t multipliers.0
+037c23b8 00000008 t units.1
+037c23c0 t __twl_end
+037c23c0 00000001 d s_cdcCurPage
+037c23c4 00000004 b s_i2cMcuDelay
+037c23c8 00000004 b s_i2cDelay
+037c23cc 00000004 B g_i2cMutex
+037c23d0 00000020 b s_mcuIrqTable
+037c23f0 00000200 b s_mcuThreadStack
+037c25f0 00000070 b s_mcuThread
+037c2660 00000001 B g_mcuPwrBtnState
+037c2664 00000010 b s_sdmcNandAesIv
+037c2674 00000038 b s_sdmcDevNand
+037c26ac 00000038 b s_sdmcDevSd
+037c26e8 00000400 b s_sdmcThreadStack
+037c2ae8 00000070 b s_sdmcThread
+037c2b58 00000010 b s_sdmcCtlBuf
+037c2b68 00000028 b s_sdmcCtl
+037c2b90 00000008 b s_tmioTxEndQueue
+037c2b98 00000008 b s_tmioIrqQueue
+037c2ba0 b __twl_bss_end
+037f8000 t __wram_start
+037f8000 00000074 T main
+037f8074 00000024 t aptWriteMcu
+037f8098 00000020 t aptClr
+037f80b8 00000020 t aptSet
+037f80d8 00000038 t aptWaitClr
+037f8110 00000038 t aptWaitSet
+037f8148 00000048 t aptWaitMcuClr.constprop.0
+037f8190 000003a0 T aptinaInit
+037f8530 00000080 T aptinaActivate
+037f85b0 00000074 T aptinaDeactivate
+037f8624 00000028 T aptinaSetMode
+037f864c 00000010 t i2cWaitBusy
+037f865c 00000028 t aptSelectRegister
+037f865c 00000028 t aptSetData
+037f8684 00000078 T aptWriteRegister
+037f86fc 00000098 T aptReadRegister
+037f8794 000000cc t i2cPxiThreadMain
+037f8860 0000002c T i2cCameraServerStart
+037f888c 0000001e t _threadTickTask
+037f88ac 00000072 T threadExit
+037f8920 00000080 T _threadInit
+037f89a0 000000ba T threadPrepare
+037f8a5c 0000006a T threadStart
+037f8ac8 00000070 T threadIrqWait
+037f8b38 0000004a T threadSleepTicks
+037f8b84 00000078 T threadSwitchTo
+037f8bfc 000000c8 T threadBlock
+037f8cc4 00000100 T threadUnblockOneByValue
+037f8dc4 000000f4 T threadUnblockAllByValue
+037f8eb8 000000f8 T threadUnblockAllByMask
+037f8fb0 000000f4 T threadUpdateDynamicPrio
+037f90a4 000000cc t threadRemoveWaiter
+037f9170 000000ca T mutexLock
+037f923c 00000076 T mutexUnlock
+037f92b4 0000006c T mailboxTrySend
+037f9320 00000066 T mailboxRecv
+037f9388 0000004c T armCopyMem32
+037f93d4 00000058 T armFillMem32
+037f942c 0000002c T armContextSave
+037f9458 00000020 T armContextLoad
+037f945c T armContextLoadFromSvc
+037f9478 00000014 T armIrqLockByPsr
+037f948c 00000014 T armIrqUnlockByPsr
+037f94a0 00000004 T svcWaitByLoop
+037f94a4 00000004 T svcHalt
+037f94a8 00000004 T svcSleep
+037f94ac 00000004 T svcGetCRC16
+037f94b0 00000006 T svcCustomHalt
+037f94b6 0000000c t _pxiMailboxHandler
+037f94c2 00000002 W _pxiRecvUnhandled
+037f94c4 000000c0 t _pxiRecvIrqHandler
+037f9584 00000054 T _pxiInit
+037f95d8 00000012 T pxiWaitForPing
+037f95ec 00000054 T pxiSetHandler
+037f9640 00000014 T pxiSetMailbox
+037f9654 00000020 T pxiWaitRemote
+037f9674 0000003c T pxiSendPacket
+037f96b0 00000024 t _keypadSendExtToArm9
+037f96d4 00000038 T keypadStartExtServer
+037f970c 0000002a t _pmCallEventHandlers
+037f9738 00000024 T pmPrepareToReset
+037f975c 000000c0 t _pmPxiThreadMain
+037f981c 0000001c t _pmResetPxiHandler
+037f9838 00000002 W systemErrorExit
+037f983c 000000c0 T pmInit
+037f98fc 00000014 T pmShouldReset
+037f9910 00000010 T pmIsSleepAllowed
+037f9920 00000030 T pmHasResetJumpTarget
+037f9950 000000f2 T __syscall_exit
+037f9a44 000000de T pmEnterSleep
+037f9b24 00000088 T pmMainLoop
+037f9bac 00000010 t _rtcUpdateTask
+037f9bbc 000000b4 T rtcReadRegister
+037f9c70 000000b0 T rtcWriteRegister
+037f9d20 00000094 T rtcInit
+037f9db4 00000036 T rtcReadDateTime
+037f9dec 00000060 T rtcDateTimeToUnix
+037f9e4c 00000040 T rtcSyncTime
+037f9e8c 00000030 t _pmicSpiBegin
+037f9ebc 00000040 T pmicWriteRegister
+037f9efc 00000048 T pmicReadRegister
+037f9f44 00000022 T pmicIssueShutdown
+037f9f68 00000060 t _envValidateUserSettings
+037f9fc8 000000a6 t _envLoadUserSettings
+037fa070 00000020 T envReadNvramSettings
+037fa090 00000068 T pmGetBatteryState
+037fa0f8 00000034 T pmSetPowerLed
+037fa12c 00000060 T pmMicSetAmp
+037fa18c 0000002c T pmReadNvram
+037fa1b8 00000028 T touchStartServer
+037fa1e0 000000b4 T touchLoadCalibration
+037fa294 0000003c T touchInit
+037fa2d0 0000011c T touchRead
+037fa3ec 00000088 t _touchSrvThreadMain
+037fa474 0000005c T blkInit
+037fa4d0 00000046 T blkDevIsPresent
+037fa518 0000005e T blkDevInit
+037fa578 0000007a T blkDevReadSectors
+037fa5f4 0000007a T blkDevWriteSectors
+037fa670 000000a2 t _blkPxiThread
+037fa714 00000034 T irqSet
+037fa748 0000001c t _tickCountIsr
+037fa764 00000070 T tickInit
+037fa7d4 0000004c T tickGetCount
+037fa820 00000044 t _tickTaskSchedule
+037fa864 00000076 t _tickTaskIsr
+037fa8dc 0000007c T tickTaskStart
+037fa958 00000054 T tickTaskStop
+037fa9ac 0000014c T __irq_handler
+037faaf8 00000028 t _nvramSpiBegin
+037fab20 00000050 T nvramWaitReady
+037fab70 000000a0 T nvramReadDataBytes
+037fac10 00000054 t _tscPowerDownBetweenConversions
+037fac64 00000138 t _tscTryReadChannel
+037fad9c 0000002c t _tscDetectTouch
+037fadc8 0000000c T tscInit
+037fadd4 00000084 T tscReadTouch
+037fae58 00000012 T __gnu_thumb1_case_sqi
+037fae6c 00000012 T __gnu_thumb1_case_uqi
+037fae80 t .udivsi3_skip_div0_test
+037fae80 T __aeabi_uidiv
+037fae80 000000fc T __udivsi3
+037faf7c 00000020 T __aeabi_uidivmod
+037faf9c T __aeabi_idiv
+037faf9c 00000130 T __divsi3
+037fafa4 t .divsi3_skip_div0_test
+037fb0cc 00000020 T __aeabi_idivmod
+037fb0ec 00000002 W __aeabi_idiv0
+037fb0ec 00000002 W __aeabi_ldiv0
+037fb0f0 00000016 T __bswapsi2
+037fb108 000000aa T memcpy
+037fb1b4 0000008c T memset
+037fb240 00000008 t __twlNandWriteSectorsAes_from_thumb
+037fb248 00000008 t __twlNandReadSectors_from_thumb
+037fb250 00000008 t __twlSdReadSectors_from_thumb
+037fb258 0000000c t ____aeabi_idiv0_from_arm
+037fb264 00000008 t __twlSdIsInserted_from_thumb
+037fb26c 00000008 t __twlblkInit_from_thumb
+037fb274 00000008 t __twlSdInit_from_thumb
+037fb27c 00000008 t ____aeabi_idiv_from_thumb
+037fb284 00000008 t __twlNandWriteSectors_from_thumb
+037fb28c 00000008 t __twlNandReadSectorsAes_from_thumb
+037fb294 00000008 t __twlSdWriteSectors_from_thumb
+037fb29c 00000008 t __twlNandInit_from_thumb
+037fb2a8 00000018 t s_monthDayOffsets.0
+037fb2c0 00000001 d currentDevice
+037fb2c4 d __wram_end
+037fb2c4 b completed.1
+037fb2c8 b object.0
+037fb2e0 00000001 b aptinaTimedOut
+037fb2e8 00000400 b s_i2cPxiThreadStack
+037fb6e8 00000070 b s_i2cPxiThread
+037fb758 00000008 b s_sleepThreads
+037fb760 00000008 b s_joinThreads
+037fb768 00000070 b s_idleThread
+037fb7d8 00000070 b s_mainThread
+037fb848 00000100 B __irq_table
+037fb948 00000024 B __sched_state
+037fb96c 00000008 b s_mailboxRecvQueue
+037fb974 000001f0 b s_pxiChannels
+037fbb64 00000004 b s_pxiRecvState
+037fbb68 00000008 b s_pxiRecvQueue
+037fbb70 00000004 b s_pxiSendMutex
+037fbb74 00000010 b s_keypadTask
+037fbb88 00000200 b s_pmPxiThreadStack
+037fbd88 00000070 b s_pmPxiThread
+037fbdf8 0000000c b s_pmState
+037fbe04 00000010 b s_rtcUpdateTask
+037fbe14 00000004 b s_rtcMutex
+037fbe18 00000004 B g_spiMutex
+037fbe20 00000100 b s_touchSrvThreadStack
+037fbf20 00000070 b s_touchSrvThread
+037fbf90 0000001c b s_touchState
+037fbfb0 00000400 b s_blkPxiThreadStack
+037fc3b0 00000070 b s_blkPxiThread
+037fc420 00000020 b s_blkPxiMailboxData
+037fc440 00000008 b s_blkPxiMailbox
+037fc448 00000001 b s_blkHasTwl
+037fc44c 00000004 b s_dldiDiscIface
+037fc450 00000004 b s_firstTask
+037fc458 00000008 b s_highTickCount
+037fc460 00000001 b s_tickInit
+037fc461 00000001 B g_cdcIsTwlMode
+037fc462 00000001 B g_isTwlMode
+037fc463 00000001 b touching.0
+037fc464 00000004 V __stdio_exit_handler
+037fc468 00000004 B fake_heap_start
+037fc46c 00000004 B fake_heap_end
+037fc470 b __wram_bss_end
+0380f000 t __sys_start
+0380fe80 a __sp_usr
+0380ff80 a __sp_irq
+0380ffc0 a __irq_flags2
+0380ffc0 a __sp_svc
+0380fff8 a __irq_flags
+0380fffc a __irq_vector

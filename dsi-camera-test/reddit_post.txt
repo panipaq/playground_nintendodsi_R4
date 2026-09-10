@@ -1,0 +1,22 @@
+Title: Got a custom NDS ARM7 camera driver booting on real DSi hardware — but stuck on the DS-vs-TWL-mode wall (flashcart only)
+
+TL;DR: Wrote a custom ARM7+ARM9 homebrew pair that drives the DSi's camera I2C/DMA hardware directly. Builds and boots fine on real hardware, but camera init never succeeds because the console stays in DS-compatibility mode instead of real TWL/DSi mode when booted from a flashcart (TWiLight Menu++ + nds-bootstrap, correctly configured). Asking whether that's a hard limitation of flashcart booting, or if there's a way around it short of Unlaunch/DSiWarehax.
+
+Hey all,
+
+I've been working through a homebrew learning project on devkitARM/libnds (a small coffee-ordering app), and as a side quest I wanted to try accessing the DSi's built-in cameras from custom homebrew. Wanted to share where I landed, partly to sanity-check my understanding and partly in case it helps the next person hitting the same wall.
+
+What I built:
+A custom ARM7 core doing the I2C init dance for the two Aptina MT9V113 camera modules (addresses 0x78/0x7A, GBATEK-documented registers), talking to an ARM9 side that programs CAM_MCNT/CAM_CNT/CAM_DAT and pulls frames via NDMA, over a PXI channel. Adapted from the public domain Epicpkmn11/dsi-camera reference rather than reinventing the I2C register dance from scratch.
+
+Where I'm stuck:
+It builds clean, boots clean on real hardware (no crash), but camera init always times out at the very first I2C wait. Root cause, confirmed via calico's systemIsTwlMode(): the console is running in plain DS-compatibility mode, not real TWL/DSi mode — even after:
+- Getting TWiLight Menu++ to actually autoboot (was falling back to the flashcart's native kernel before),
+- Setting Game Loader to nds-bootstrap,
+- Placing the ROM in roms/dsi.
+
+Per TWiLight Menu++'s own docs, true DSi-mode boot for DSi-Enhanced homebrew (via donor ROM) is only supported when running from the console's internal SD card slot (DSiWarehax or similar), not from a flashcart — flashcart donor-ROM support is scoped to a narrow B4DS compatibility case, not general DSi-mode entry.
+
+Question for anyone who's actually done this: Is that really a hard wall (i.e., is genuine TWL mode from a flashcart simply not a thing, full stop), or is there a flashcart-specific trick I'm missing? And for anyone who has gotten a camera demo running — did you go through Unlaunch, or one of the DSiWarehax-style entry points straight to the internal SD card? Trying to decide whether it's worth going down the Unlaunch/NAND route just for this, versus finding a save-based entry exploit first.
+
+Happy to share the ARM7/ARM9 source if anyone wants to poke at it.
