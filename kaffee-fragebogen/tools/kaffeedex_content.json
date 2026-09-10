@@ -1,0 +1,52 @@
+{
+  "labels": {
+    "caffeine": "Koffein",
+    "volume": "Menge"
+  },
+  "drinks": {
+    "americano": {
+      "name": "Espresso",
+      "category": "Intensiver Kaffee-Shot",
+      "badge1": "OHNE MILCH",
+      "badge2": "STARK",
+      "caffeineMg": 70,
+      "volumeMl": 30,
+      "descLines": [
+        "Kaffeezubereitungsart, bei der",
+        "heißes Wasser mit hohem Druck durch",
+        "sehr fein gemahlenes Kaffeemehl aus",
+        "gerösteten Kaffeebohnen gepresst wird."
+      ],
+      "icon": "gfx/coffee_americano.png"
+    },
+    "capuccino": {
+      "name": "Cappuccino",
+      "category": "Milchkaffee",
+      "badge1": "MIT MILCH",
+      "badge2": "CREMIG",
+      "caffeineMg": 70,
+      "volumeMl": 180,
+      "descLines": [
+        "Espresso, heisse Milch und",
+        "ein Deckel Milchschaum.",
+        "Cremig und rund - der",
+        "Klassiker am Morgen."
+      ],
+      "icon": "gfx/coffee_capuccino.png"
+    },
+    "filter": {
+      "name": "Filterkaffee",
+      "category": "Klassiker",
+      "badge1": "MILCH OPTIONAL",
+      "badge2": "KRAEFTIG",
+      "caffeineMg": 110,
+      "volumeMl": 250,
+      "descLines": [
+        "Langsam durch den Filter",
+        "gebrueht. Schwarz oder serviert",
+        "mit einem Schluck Milch."
+      ],
+      "icon": "gfx/coffee_filter.png"
+    }
+  }
+}
